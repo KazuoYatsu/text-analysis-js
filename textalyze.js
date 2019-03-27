@@ -16,15 +16,15 @@ function itemCounts(array) {
 
 module.exports = { itemCounts };
 
-
 //
 // running the app
 //
+if (require.main === module) {
+  const array = ['a', 'b', 'b', 'c', 'c', 'a', 'd'];
 
-const array = ['a', 'b', 'b', 'c', 'c', 'a', 'd'];
+  console.log(`The counts for ${array} are...`);
 
-console.log(`The counts for ${array} are...`);
-
-itemCounts(array).forEach((value, key) => {
-  console.log(`${key}\t${value}`);
-});
+  itemCounts(array).forEach((value, key) => {
+    console.log(`${key}\t${value}`);
+  });
+}
