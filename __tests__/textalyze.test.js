@@ -1,4 +1,4 @@
-const { itemCounts } = require('../textalyze');
+const { itemCounts, arrayFrom } = require('../textalyze');
 
 describe('itemCount', () => {
   test('returns a count of the strings in the array', () => {
@@ -34,5 +34,28 @@ describe('itemCount', () => {
     const expectedOutput = new Map([['a', 2], ['A', 2]]);
 
     expect(itemCounts(input)).toEqual(expectedOutput);
+  });
+});
+
+describe('arrayFrom', () => {
+  test('handles non-string inputs', () => {
+    const input = 1234;
+    const expectedOutput = [];
+
+    expect(arrayFrom(input)).toEqual(expectedOutput);
+  });
+
+  test('handles undefined inputs', () => {
+    const input = undefined;
+    const expectedOutput = [];
+
+    expect(arrayFrom(input)).toEqual(expectedOutput);
+  });
+
+  test('returns string an array of characters from a string', () => {
+    const input = 'Hello world';
+    const expectedOutput = ['H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'];
+
+    expect(arrayFrom(input)).toEqual(expectedOutput);
   });
 });

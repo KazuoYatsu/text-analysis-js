@@ -14,15 +14,28 @@ function itemCounts(array) {
   return counts;
 }
 
-module.exports = { itemCounts };
+/**
+ * Given an input String, returns an Array containing each letter
+ * @param {String} string - The String to convert to array
+ * @param {Array} array - The Array containing the characters from the string
+ */
+function arrayFrom(string) {
+  if (!string || typeof string !== 'string') {
+    return [];
+  }
+
+  return string.split('');
+}
+module.exports = { itemCounts, arrayFrom };
 
 //
 // running the app
 //
 if (require.main === module) {
-  const array = ['a', 'b', 'b', 'c', 'c', 'a', 'd'];
+  const string = 'Hello World';
+  const array = arrayFrom(string);
 
-  console.log(`The counts for ${array} are...`);
+  console.log(`The counts for "${string}" are...`);
 
   itemCounts(array).forEach((value, key) => {
     console.log(`${key}\t${value}`);
