@@ -1,4 +1,4 @@
-const { itemCounts, arrayFrom } = require('../textalyze');
+const { itemCounts, arrayFrom, sanitize } = require('../textalyze');
 
 describe('itemCount', () => {
   test('returns a count of the strings in the array', () => {
@@ -57,5 +57,28 @@ describe('arrayFrom', () => {
     const expectedOutput = ['H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd'];
 
     expect(arrayFrom(input)).toEqual(expectedOutput);
+  });
+});
+
+describe('sanitize', () => {
+  test('handles non-string inputs', () => {
+    const input = 1234;
+    const expectedOutput = '';
+
+    expect(sanitize(input)).toEqual(expectedOutput);
+  });
+
+  test('handles undefined inputs', () => {
+    const input = undefined;
+    const expectedOutput = '';
+
+    expect(sanitize(input)).toEqual(expectedOutput);
+  });
+
+  test('returns the sanitized string', () => {
+    const input = 'Hello World';
+    const expectedOutput = 'hello world';
+
+    expect(sanitize(input)).toEqual(expectedOutput);
   });
 });
