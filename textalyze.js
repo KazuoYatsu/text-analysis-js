@@ -51,7 +51,37 @@ function sanitize(string) {
   return string.toLowerCase();
 }
 
-module.exports = { itemCounts, arrayFrom, sanitize };
+/**
+ * Given an input Map and total count of elements, returns the object containing the percentage acording to total
+ * @param {Map} counts - The map containing the counts for each value
+ * @param {Number} total - The total count of elements
+ * @returns {Map} The frequency in percentage of each value
+ */
+function getFrequencyStatistics(counts, total) {
+  if (!counts || !(counts instanceof Map)) {
+    return counts;
+  }
+
+  if (!total || isNaN(total)) {
+    return counts;
+  }
+
+  const statistics = new Map();
+
+  counts.forEach((value, key) => {
+    const percentage = value / total;
+    statistics.set(key, percentage);
+  });
+
+  return statistics;
+}
+
+module.exports = {
+  itemCounts,
+  arrayFrom,
+  sanitize,
+  getFrequencyStatistics,
+};
 
 //
 // running the app
@@ -69,9 +99,12 @@ function main(args) {
 
     const sanitizedString = sanitize(data.toString());
     const array = arrayFrom(sanitizedString);
+    const counts = itemCounts(array);
+    const statistics = getFrequencyStatistics(counts, array.length);
 
-    itemCounts(array).forEach((value, key) => {
-      console.log(`${key}\t${value}`);
+    statistics.forEach((value, key) => {
+      const humanReadablePercentage = (value * 100).toFixed(2);
+      console.log(`${key}\t${humanReadablePercentage}%`);
     });
   });
 }
