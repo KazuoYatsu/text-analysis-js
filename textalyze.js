@@ -56,9 +56,11 @@ module.exports = { itemCounts, arrayFrom, sanitize };
 //
 if (require.main === module) {
   const string = 'Hello World';
-  const array = arrayFrom(string);
 
   console.log(`The counts for "${string}" are...`);
+
+  const sanitizedStirng = sanitize(string);
+  const array = arrayFrom(sanitizedStirng);
 
   itemCounts(array).forEach((value, key) => {
     console.log(`${key}\t${value}`);
