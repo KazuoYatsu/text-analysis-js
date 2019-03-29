@@ -1,7 +1,7 @@
 /**
  * Given an input String, returns true if it's a valid string false otherwise
  * @param {String} string - The String to be sanitized
- * @param {Boolean} isString - The String sanitized
+ * @returns {Boolean} The String sanitized
  */
 function validateString(string) {
   return typeof string !== 'string';
@@ -10,7 +10,7 @@ function validateString(string) {
 /**
  * Given an input Array, returns a Map containing the count of each item in the input.
  * @param {Array} array - The array of items to count
- * @param {Map} counts - A Map containing the counts of the items in the input array
+ * @returns {Map} A Map containing the counts of the items in the input array
  */
 function itemCounts(array) {
   const counts = new Map();
@@ -26,7 +26,7 @@ function itemCounts(array) {
 /**
  * Given an input String, returns an Array containing each letter
  * @param {String} string - The String to convert to array
- * @param {Array} array - The Array containing the characters from the string
+ * @returns {Array} The Array containing the characters from the string
  */
 function arrayFrom(string) {
   if (validateString(string)) {
@@ -39,7 +39,7 @@ function arrayFrom(string) {
 /**
  * Given an input String, returns the string with only lower case characters
  * @param {String} string - The String to be sanitized
- * @param {String} sanitizedString - The String sanitized
+ * @returns {String} The String sanitized
  */
 function sanitize(string) {
   if (validateString(string)) {
