@@ -2,11 +2,11 @@ const fs = require('fs');
 
 /**
  * Given an input String, returns true if it's a valid string false otherwise
- * @param {String} string - The String to be sanitized
- * @returns {Boolean} The String sanitized
+ * @param {String} string - The supposed string to be validated
+ * @returns {Boolean} True if it is a string
  */
-function validateString(string) {
-  return typeof string !== 'string';
+function isString(string) {
+  return typeof string === 'string';
 }
 
 /**
@@ -31,7 +31,7 @@ function itemCounts(array) {
  * @returns {Array} The Array containing the characters from the string
  */
 function arrayFrom(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return [];
   }
 
@@ -44,7 +44,7 @@ function arrayFrom(string) {
  * @returns {String} The String sanitized
  */
 function sanitize(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return '';
   }
 
