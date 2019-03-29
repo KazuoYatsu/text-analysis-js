@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 /**
  * Given an input String, returns true if it's a valid string false otherwise
  * @param {String} string - The String to be sanitized
@@ -55,14 +57,21 @@ module.exports = { itemCounts, arrayFrom, sanitize };
 // running the app
 //
 if (require.main === module) {
-  const string = 'Hello World';
+  const path = './sample_data/tale-of-two-cities.txt';
 
-  console.log(`The counts for "${string}" are...`);
+  fs.readFile(path, (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
 
-  const sanitizedStirng = sanitize(string);
-  const array = arrayFrom(sanitizedStirng);
+    console.log(`The counts for "${path}" are...`);
 
-  itemCounts(array).forEach((value, key) => {
-    console.log(`${key}\t${value}`);
+    const sanitizedString = sanitize(data.toString());
+    const array = arrayFrom(sanitizedString);
+
+    itemCounts(array).forEach((value, key) => {
+      console.log(`${key}\t${value}`);
+    });
   });
 }
