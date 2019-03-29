@@ -52,7 +52,8 @@ function sanitize(string) {
 }
 
 /**
- * Given an input Map and total count of elements, returns the object containing the percentage acording to total
+ * Given an input Map and total count of elements,
+ * returns the object containing the percentage acording to total
  * @param {Map} counts - The map containing the counts for each value
  * @param {Number} total - The total count of elements
  * @returns {Map} The frequency in percentage of each value
@@ -62,7 +63,7 @@ function getFrequencyStatistics(counts, total) {
     return counts;
   }
 
-  if (!total || isNaN(total)) {
+  if (!total || Number.isNaN(total)) {
     return counts;
   }
 
