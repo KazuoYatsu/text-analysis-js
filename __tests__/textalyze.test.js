@@ -1,4 +1,4 @@
-const { itemCounts, arrayFrom, sanitize, getFrequencyStatistics } = require('../textalyze');
+const { itemCounts, arrayFrom, sanitize, getFrequencyStatistics, getHistogramBar } = require('../textalyze');
 
 describe('itemCount', () => {
   test('returns a count of the strings in the array', () => {
@@ -122,5 +122,22 @@ describe('updateToFrequencyStatistics', () => {
     const expectedOutput = new Map([['a', 2], ['A', 2]]);
 
     expect(getFrequencyStatistics(inputMap, inputTotal)).toEqual(expectedOutput);
+  });
+});
+
+describe('getHistogramBar', () => {
+  test('gets the histogram bar', () => {
+    const inputValue = 5;
+    const inputMaxValue = 10;
+    const inputHistogramString = '-';
+    const inputMaxBarLength = 20;
+    const expectedOutput = '-'.repeat(10);
+
+    const output = getHistogramBar(inputValue,
+      inputMaxValue,
+      inputHistogramString,
+      inputMaxBarLength);
+
+    expect(output).toEqual(expectedOutput);
   });
 });
