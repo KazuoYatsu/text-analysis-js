@@ -56,8 +56,8 @@ module.exports = { itemCounts, arrayFrom, sanitize };
 //
 // running the app
 //
-if (require.main === module) {
-  const path = './sample_data/tale-of-two-cities.txt';
+function main(args) {
+  const path = args[0];
 
   fs.readFile(path, (err, data) => {
     if (err) {
@@ -74,4 +74,9 @@ if (require.main === module) {
       console.log(`${key}\t${value}`);
     });
   });
+}
+
+if (require.main === module) {
+  const args = process.argv.slice(2, process.argv.length);
+  main(args);
 }
