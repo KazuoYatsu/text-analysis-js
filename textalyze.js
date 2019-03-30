@@ -56,23 +56,28 @@ function sanitize(string) {
  * returns the object containing the percentage acording to total
  * @param {Map} counts - The map containing the counts for each value
  * @param {Number} total - The total count of elements
+ * @param {Boolean} sorted - If the return must be sorted
  * @returns {Map} The frequency in percentage of each value
  */
-function getFrequencyStatistics(counts, total) {
+function getFrequencyStatistics(counts, total, sorted) {
   if (!counts || !(counts instanceof Map)) {
     return counts;
   }
 
-  if (!total || Number.isNaN(total)) {
+  if (!total || Number.isNaN(Number(total))) {
     return counts;
   }
 
-  const statistics = new Map();
+  let statistics = new Map();
 
   counts.forEach((value, key) => {
     const percentage = value / total;
     statistics.set(key, percentage);
   });
+
+  if (sorted) {
+    statistics = new Map([...statistics.entries()].sort());
+  }
 
   return statistics;
 }

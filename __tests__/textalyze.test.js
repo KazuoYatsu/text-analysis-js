@@ -129,6 +129,15 @@ describe('updateToFrequencyStatistics', () => {
 
     expect(getFrequencyStatistics(inputMap, inputTotal)).toEqual(expectedOutput);
   });
+
+  test('returns sorted map', () => {
+    const inputMap = new Map([['b', 2], ['a', 2]]);
+    const inputTotal = 4;
+    const sorted = true;
+    const expectedOutput = new Map([['a', 0.5], ['b', 0.5]]);
+
+    expect(getFrequencyStatistics(inputMap, inputTotal, sorted)).toEqual(expectedOutput);
+  });
 });
 
 describe('getHistogramBar', () => {
