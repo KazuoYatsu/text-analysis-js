@@ -1,4 +1,10 @@
-const { itemCounts, arrayFrom, sanitize } = require('../textalyze');
+const {
+  itemCounts,
+  arrayFrom,
+  sanitize,
+  getFrequencyStatistics,
+  getHistogramBar,
+} = require('../textalyze');
 
 describe('itemCount', () => {
   test('returns a count of the strings in the array', () => {
@@ -77,8 +83,76 @@ describe('sanitize', () => {
 
   test('returns the sanitized string', () => {
     const input = 'Hello World';
-    const expectedOutput = 'hello world';
+    const expectedOutput = 'helloworld';
 
     expect(sanitize(input)).toEqual(expectedOutput);
+  });
+});
+
+describe('updateToFrequencyStatistics', () => {
+  test('returns the percentage', () => {
+    const inputMap = new Map([['a', 2], ['A', 2]]);
+    const inputTotal = 4;
+    const expectedOutput = new Map([['a', 0.5], ['A', 0.5]]);
+
+    expect(getFrequencyStatistics(inputMap, inputTotal)).toEqual(expectedOutput);
+  });
+
+  test('handles non map input', () => {
+    const inputMap = 123456;
+    const inputTotal = 4;
+    const expectedOutput = 123456;
+
+    expect(getFrequencyStatistics(inputMap, inputTotal)).toEqual(expectedOutput);
+  });
+
+  test('handles non numeric input', () => {
+    const inputMap = new Map([['a', 2], ['A', 2]]);
+    const inputTotal = 'four';
+    const expectedOutput = new Map([['a', 2], ['A', 2]]);
+
+    expect(getFrequencyStatistics(inputMap, inputTotal)).toEqual(expectedOutput);
+  });
+
+  test('handles undefined instead of map', () => {
+    const inputMap = undefined;
+    const inputTotal = 4;
+    const expectedOutput = undefined;
+
+    expect(getFrequencyStatistics(inputMap, inputTotal)).toEqual(expectedOutput);
+  });
+
+  test('handles undefined instead of total', () => {
+    const inputMap = new Map([['a', 2], ['A', 2]]);
+    const inputTotal = undefined;
+    const expectedOutput = new Map([['a', 2], ['A', 2]]);
+
+    expect(getFrequencyStatistics(inputMap, inputTotal)).toEqual(expectedOutput);
+  });
+
+  test('returns sorted map', () => {
+    const inputMap = new Map([['b', 2], ['a', 2]]);
+    const inputTotal = 4;
+    const sorted = true;
+    const expectedOutput = new Map([['a', 0.5], ['b', 0.5]]);
+
+    expect(getFrequencyStatistics(inputMap, inputTotal, sorted)).toEqual(expectedOutput);
+  });
+});
+
+describe('getHistogramBar', () => {
+  test('gets the histogram bar', () => {
+    const inputValue = 5;
+    const inputMaxValue = 10;
+    const inputHistogramString = '-';
+    const inputMaxBarLength = 20;
+    const expectedOutput = '-'.repeat(10);
+
+    const output = getHistogramBar(inputValue,
+      inputMaxValue,
+      inputHistogramString,
+      inputMaxBarLength);
+
+    expect(output).toEqual(expectedOutput);
   });
 });

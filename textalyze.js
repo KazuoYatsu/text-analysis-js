@@ -1,10 +1,12 @@
+const fs = require('fs');
+
 /**
  * Given an input String, returns true if it's a valid string false otherwise
- * @param {String} string - The String to be sanitized
- * @returns {Boolean} The String sanitized
+ * @param {String} string - The supposed string to be validated
+ * @returns {Boolean} True if it is a string
  */
-function validateString(string) {
-  return typeof string !== 'string';
+function isString(string) {
+  return typeof string === 'string';
 }
 
 /**
@@ -29,7 +31,7 @@ function itemCounts(array) {
  * @returns {Array} The Array containing the characters from the string
  */
 function arrayFrom(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return [];
   }
 
@@ -37,32 +39,108 @@ function arrayFrom(string) {
 }
 
 /**
- * Given an input String, returns the string with only lower case characters
+ * Given an input String, returns the string with only lower case a-z characters
  * @param {String} string - The String to be sanitized
  * @returns {String} The String sanitized
  */
 function sanitize(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return '';
   }
 
-  return string.toLowerCase();
+  return string.toLowerCase().replace(/[^a-z]/gi, '');
 }
 
-module.exports = { itemCounts, arrayFrom, sanitize };
+/**
+ * Given an input Map and total count of elements,
+ * returns the object containing the percentage acording to total
+ * @param {Map} counts - The map containing the counts for each value
+ * @param {Number} total - The total count of elements
+ * @param {Boolean} sorted - If the return must be sorted
+ * @returns {Map} The frequency in percentage of each value
+ */
+function getFrequencyStatistics(counts, total, sorted) {
+  if (!counts || !(counts instanceof Map)) {
+    return counts;
+  }
+
+  if (!total || Number.isNaN(Number(total))) {
+    return counts;
+  }
+
+  let statistics = new Map();
+
+  counts.forEach((value, key) => {
+    const percentage = value / total;
+    statistics.set(key, percentage);
+  });
+
+  if (sorted) {
+    statistics = new Map([...statistics.entries()].sort());
+  }
+
+  return statistics;
+}
+
+/**
+ * Builds a string containing repetitions of histogramString
+ * according to current value in comparison to maxValue
+ * @param {Number} value - The current value
+ * @param {Number} maxValue - The max value for param value
+ * @param {String} histogramString - The string to compose the histogram bar
+ * @param {Number} maxBarLength - The max amount of times histogramString can be repeated
+ * @returns {String} The hitogram bar
+ */
+function getHistogramBar(value, maxValue, histogramString, maxBarLength) {
+  const charCount = value * maxBarLength / maxValue;
+  const histogramBar = histogramString.repeat(charCount);
+
+  return histogramBar;
+}
+
+module.exports = {
+  itemCounts,
+  arrayFrom,
+  sanitize,
+  getFrequencyStatistics,
+  getHistogramBar,
+};
 
 //
 // running the app
 //
-if (require.main === module) {
-  const string = 'Hello World';
+/**
+ * Runs the main application
+ * @param {String []} args - The args
+ */
+function main(argv) {
+  const path = argv[2];
+  const histogramString = argv[3] || '-';
 
-  console.log(`The counts for "${string}" are...`);
+  fs.readFile(path, (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
 
-  const sanitizedStirng = sanitize(string);
-  const array = arrayFrom(sanitizedStirng);
+    const sanitizedString = sanitize(data.toString());
+    const array = arrayFrom(sanitizedString);
+    const counts = itemCounts(array);
+    const sorted = true;
+    const statistics = getFrequencyStatistics(counts, array.length, sorted);
+    const maxValue = Math.max(...statistics.values());
 
-  itemCounts(array).forEach((value, key) => {
-    console.log(`${key}\t${value}`);
+    console.log(`The counts for "${path}" are...`);
+
+    statistics.forEach((value, key) => {
+      const humanReadablePercentage = (value * 100).toFixed(2).padStart(5, ' ');
+      const histogramBar = getHistogramBar(value, maxValue, histogramString, 80);
+
+      console.log(`${key} [ ${humanReadablePercentage}% ] ${histogramBar}`);
+    });
   });
+}
+
+if (require.main === module) {
+  main(process.argv);
 }
