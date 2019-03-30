@@ -109,8 +109,13 @@ module.exports = {
 //
 // running the app
 //
-function main(args) {
-  const path = args[0];
+/**
+ * Runs the main application
+ * @param {String []} args - The args
+ */
+function main(argv) {
+  const path = argv[2];
+  const histogramString = argv[3] || '-';
 
   fs.readFile(path, (err, data) => {
     if (err) {
@@ -118,21 +123,24 @@ function main(args) {
       return;
     }
 
-    console.log(`The counts for "${path}" are...`);
-
     const sanitizedString = sanitize(data.toString());
     const array = arrayFrom(sanitizedString);
     const counts = itemCounts(array);
-    const statistics = getFrequencyStatistics(counts, array.length);
+    const sorted = true;
+    const statistics = getFrequencyStatistics(counts, array.length, sorted);
+    const maxValue = Math.max(...statistics.values());
+
+    console.log(`The counts for "${path}" are...`);
 
     statistics.forEach((value, key) => {
-      const humanReadablePercentage = (value * 100).toFixed(2);
-      console.log(`${key}\t${humanReadablePercentage}%`);
+      const humanReadablePercentage = (value * 100).toFixed(2).padStart(5, ' ');
+      const histogramBar = getHistogramBar(value, maxValue, histogramString, 80);
+
+      console.log(`${key} [ ${humanReadablePercentage}% ] ${histogramBar}`);
     });
   });
 }
 
 if (require.main === module) {
-  const args = process.argv.slice(2, process.argv.length);
-  main(args);
+  main(process.argv);
 }
