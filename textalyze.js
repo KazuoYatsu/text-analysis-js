@@ -63,7 +63,7 @@ function getFrequencyStatistics(counts, total) {
     return counts;
   }
 
-  if (!total || Number.isNaN(total)) {
+  if (!total || Number.isNaN(Number(total))) {
     return counts;
   }
 
