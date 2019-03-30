@@ -83,7 +83,7 @@ describe('sanitize', () => {
 
   test('returns the sanitized string', () => {
     const input = 'Hello World';
-    const expectedOutput = 'hello world';
+    const expectedOutput = 'helloworld';
 
     expect(sanitize(input)).toEqual(expectedOutput);
   });

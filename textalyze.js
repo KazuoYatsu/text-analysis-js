@@ -39,7 +39,7 @@ function arrayFrom(string) {
 }
 
 /**
- * Given an input String, returns the string with only lower case characters
+ * Given an input String, returns the string with only lower case a-z characters
  * @param {String} string - The String to be sanitized
  * @returns {String} The String sanitized
  */
@@ -48,7 +48,7 @@ function sanitize(string) {
     return '';
   }
 
-  return string.toLowerCase();
+  return string.toLowerCase().replace(/[^a-z]/gi, '');
 }
 
 /**
