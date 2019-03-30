@@ -77,11 +77,28 @@ function getFrequencyStatistics(counts, total) {
   return statistics;
 }
 
+/**
+ * Builds a string containing repetitions of histogramString
+ * according to current value in comparison to maxValue
+ * @param {Number} value - The current value
+ * @param {Number} maxValue - The max value for param value
+ * @param {String} histogramString - The string to compose the histogram bar
+ * @param {Number} maxBarLength - The max amount of times histogramString can be repeated
+ * @returns {String} The hitogram bar
+ */
+function getHistogramBar(value, maxValue, histogramString, maxBarLength) {
+  const charCount = value * maxBarLength / maxValue;
+  const histogramBar = histogramString.repeat(charCount);
+
+  return histogramBar;
+}
+
 module.exports = {
   itemCounts,
   arrayFrom,
   sanitize,
   getFrequencyStatistics,
+  getHistogramBar,
 };
 
 //
