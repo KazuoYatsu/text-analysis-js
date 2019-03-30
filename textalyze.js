@@ -1,10 +1,12 @@
+const fs = require('fs');
+
 /**
  * Given an input String, returns true if it's a valid string false otherwise
- * @param {String} string - The String to be sanitized
- * @returns {Boolean} The String sanitized
+ * @param {String} string - The supposed string to be validated
+ * @returns {Boolean} True if it is a string
  */
-function validateString(string) {
-  return typeof string !== 'string';
+function isString(string) {
+  return typeof string === 'string';
 }
 
 /**
@@ -29,7 +31,7 @@ function itemCounts(array) {
  * @returns {Array} The Array containing the characters from the string
  */
 function arrayFrom(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return [];
   }
 
@@ -42,7 +44,7 @@ function arrayFrom(string) {
  * @returns {String} The String sanitized
  */
 function sanitize(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return '';
   }
 
@@ -54,15 +56,27 @@ module.exports = { itemCounts, arrayFrom, sanitize };
 //
 // running the app
 //
-if (require.main === module) {
-  const string = 'Hello World';
+function main(args) {
+  const path = args[0];
 
-  console.log(`The counts for "${string}" are...`);
+  fs.readFile(path, (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
 
-  const sanitizedStirng = sanitize(string);
-  const array = arrayFrom(sanitizedStirng);
+    console.log(`The counts for "${path}" are...`);
 
-  itemCounts(array).forEach((value, key) => {
-    console.log(`${key}\t${value}`);
+    const sanitizedString = sanitize(data.toString());
+    const array = arrayFrom(sanitizedString);
+
+    itemCounts(array).forEach((value, key) => {
+      console.log(`${key}\t${value}`);
+    });
   });
+}
+
+if (require.main === module) {
+  const args = process.argv.slice(2, process.argv.length);
+  main(args);
 }
