@@ -1,10 +1,12 @@
+const fs = require('fs');
+
 /**
  * Given an input String, returns true if it's a valid string false otherwise
- * @param {String} string - The String to be sanitized
- * @returns {Boolean} The String sanitized
+ * @param {String} string - The supposed string to be validated
+ * @returns {Boolean} True if it is a string
  */
-function validateString(string) {
-  return typeof string !== 'string';
+function isString(string) {
+  return typeof string === 'string';
 }
 
 /**
@@ -29,7 +31,7 @@ function itemCounts(array) {
  * @returns {Array} The Array containing the characters from the string
  */
 function arrayFrom(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return [];
   }
 
@@ -42,27 +44,73 @@ function arrayFrom(string) {
  * @returns {String} The String sanitized
  */
 function sanitize(string) {
-  if (validateString(string)) {
+  if (!isString(string)) {
     return '';
   }
 
   return string.toLowerCase();
 }
 
-module.exports = { itemCounts, arrayFrom, sanitize };
+/**
+ * Given an input Map and total count of elements,
+ * returns the object containing the percentage acording to total
+ * @param {Map} counts - The map containing the counts for each value
+ * @param {Number} total - The total count of elements
+ * @returns {Map} The frequency in percentage of each value
+ */
+function getFrequencyStatistics(counts, total) {
+  if (!counts || !(counts instanceof Map)) {
+    return counts;
+  }
+
+  if (!total || Number.isNaN(Number(total))) {
+    return counts;
+  }
+
+  const statistics = new Map();
+
+  counts.forEach((value, key) => {
+    const percentage = value / total;
+    statistics.set(key, percentage);
+  });
+
+  return statistics;
+}
+
+module.exports = {
+  itemCounts,
+  arrayFrom,
+  sanitize,
+  getFrequencyStatistics,
+};
 
 //
 // running the app
 //
-if (require.main === module) {
-  const string = 'Hello World';
+function main(args) {
+  const path = args[0];
 
-  console.log(`The counts for "${string}" are...`);
+  fs.readFile(path, (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
 
-  const sanitizedStirng = sanitize(string);
-  const array = arrayFrom(sanitizedStirng);
+    console.log(`The counts for "${path}" are...`);
 
-  itemCounts(array).forEach((value, key) => {
-    console.log(`${key}\t${value}`);
+    const sanitizedString = sanitize(data.toString());
+    const array = arrayFrom(sanitizedString);
+    const counts = itemCounts(array);
+    const statistics = getFrequencyStatistics(counts, array.length);
+
+    statistics.forEach((value, key) => {
+      const humanReadablePercentage = (value * 100).toFixed(2);
+      console.log(`${key}\t${humanReadablePercentage}%`);
+    });
   });
+}
+
+if (require.main === module) {
+  const args = process.argv.slice(2, process.argv.length);
+  main(args);
 }
